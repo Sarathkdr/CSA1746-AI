@@ -1,0 +1,67 @@
+% Define facts about planets
+planet(mercury, 2439.7, 57.91e6, 0.06).  % (Name, Radius (km), Distance from Sun (km), Mass (x10^24 kg))
+planet(venus, 6051.8, 108.2e6, 0.82).
+planet(earth, 6371.0, 149.6e6, 5.97).
+planet(mars, 3389.5, 227.9e6, 0.642).
+planet(jupiter, 69911.0, 778.6e6, 1898).
+planet(saturn, 58232.0, 1.434e9, 568).
+planet(uranus, 25362.0, 2.871e9, 86.8).
+planet(neptune, 24622.0, 4.495e9, 102).
+
+% Define a rule to find a planet by name
+find_planet(Name, Radius, DistanceFromSun, Mass) :-
+    planet(Name, Radius, DistanceFromSun, Mass).
+
+% Define a rule to find the largest planet by radius
+largest_planet(Name, Radius) :-
+    planet(Name, Radius, _, _),
+    \+ (planet(_, Radius2, _, _), Radius2 > Radius).
+
+% Define a rule to find planets within a certain distance from the Sun
+planets_within_distance(DistanceMax, Name, DistanceFromSun) :-
+    planet(Name, _, DistanceFromSun, _),
+    DistanceFromSun =< DistanceMax.
+
+% Define a rule to find the most massive planet
+most_massive_planet(Name, Mass) :-
+    planet(Name, _, _, Mass),
+    \+ (planet(_, _, _, Mass2), Mass2 > Mass).
+
+% Define a rule to find planets with a specific mass range
+planets_by_mass_range(MinMass, MaxMass, Name, Mass) :-
+    planet(Name, _, _, Mass),
+    Mass >= MinMass,
+    Mass =< MaxMass.
+
+% Query examples
+% Find information about Earth
+% ?- find_planet(earth, Radius, DistanceFromSun, Mass).
+% Radius = 6371.0,
+% DistanceFromSun = 149600000.0,
+% Mass = 5.97.
+
+% Find the largest planet
+% ?- largest_planet(Name, Radius).
+% Name = jupiter,
+% Radius = 69911.0.
+
+% Find planets within 1 billion km from the Sun
+% ?- planets_within_distance(1e9, Name, DistanceFromSun).
+% Name = mercury,
+% DistanceFromSun = 57910000.0 ;
+% Name = venus,
+% DistanceFromSun = 108200000.0 ;
+% Name = earth,
+% DistanceFromSun = 149600000.0 ;
+% Name = mars,
+% DistanceFromSun = 227900000.0.
+
+% Find the most massive planet
+% ?- most_massive_planet(Name, Mass).
+% Name = jupiter,
+% Mass = 1898.0.
+
+% Find planets with mass between 0.5 and 1.0 x10^24 kg
+% ?- planets_by_mass_range(0.5, 1.0, Name, Mass).
+% Name = mars,
+% Mass = 0.642.
