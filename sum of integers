@@ -1,0 +1,13 @@
+% Base case: The sum of integers from 1 to 1 is 1.
+sum(1, 1).
+
+% Recursive case: The sum of integers from 1 to N is N plus the sum of integers from 1 to N-1.
+sum(N, Result) :-
+    N > 1,
+    N1 is N - 1,
+    sum(N1, TempResult),
+    Result is N + TempResult.
+
+% Query to get the sum of integers from 1 to 10.
+sum_of_1_to_10(Result) :-
+    sum(10, Result).
