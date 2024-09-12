@@ -1,0 +1,27 @@
+% Define diseases and their dietary recommendations
+diet_for(diabetes, low_sugar).
+diet_for(hypertension, low_sodium).
+diet_for(heart_disease, low_fat).
+diet_for(arthritis, anti_inflammatory).
+diet_for(osteoporosis, calcium_rich).
+
+% Define the rules for dietary recommendations based on disease
+recommended_diet(Disease, Diet) :-
+    diet_for(Disease, Diet).
+
+% Define dietary details for different types
+diet_detail(low_sugar, 'Eat foods with low sugar content. Avoid sugary snacks and drinks.').
+diet_detail(low_sodium, 'Reduce salt intake. Avoid processed foods and choose fresh vegetables.').
+diet_detail(low_fat, 'Consume low-fat foods. Avoid saturated fats and high-cholesterol foods.').
+diet_detail(anti_inflammatory, 'Include anti-inflammatory foods like berries, nuts, and fatty fish.').
+diet_detail(calcium_rich, 'Consume foods high in calcium such as dairy products and leafy greens.').
+
+% Provide a recommendation based on the disease
+recommend_diet(Disease) :-
+    recommended_diet(Disease, Diet),
+    diet_detail(Diet, Detail),
+    format('For ~w, the recommended diet is ~w: ~w~n', [Disease, Diet, Detail]).
+
+% Example query to get diet recommendation
+% ?- recommend_diet(diabetes).
+% For diabetes, the recommended diet is low_sugar: Eat foods with low sugar content. Avoid sugary snacks and drinks.
