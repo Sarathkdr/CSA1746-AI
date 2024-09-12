@@ -1,0 +1,82 @@
+import random
+
+# Define the grid size
+GRID_SIZE = 5
+
+# Define directions
+DIRECTIONS = {
+    'UP': (-1, 0),
+    'DOWN': (1, 0),
+    'LEFT': (0, -1),
+    'RIGHT': (0, 1)
+}
+
+def print_grid(grid, vacuum_pos):
+    """Print the grid with the vacuum cleaner's position."""
+    for i in range(GRID_SIZE):
+        row = ""
+        for j in range(GRID_SIZE):
+            if (i, j) == vacuum_pos:
+                row += " V "
+            elif grid[i][j] == 1:
+                row += " D "
+            else:
+                row += " C "
+        print(row)
+    print()
+
+def is_valid_pos(x, y):
+    """Check if the position is within grid boundaries."""
+    return 0 <= x < GRID_SIZE and 0 <= y < GRID_SIZE
+
+def get_possible_moves(x, y):
+    """Get a list of valid moves from the current position."""
+    moves = []
+    for direction, (dx, dy) in DIRECTIONS.items():
+        new_x, new_y = x + dx, y + dy
+        if is_valid_pos(new_x, new_y):
+            moves.append((direction, (new_x, new_y)))
+    return moves
+
+def vacuum_cleaner(grid, start_pos):
+    """Simulate the vacuum cleaner's operation."""
+    vacuum_pos = start_pos
+    dirty_count = sum(row.count(1) for row in grid)
+    steps = 0
+    
+    while dirty_count > 0:
+        print_grid(grid, vacuum_pos)
+        
+        # Check if the current position is dirty
+        x, y = vacuum_pos
+        if grid[x][y] == 1:
+            print(f"Cleaning ({x}, {y})")
+            grid[x][y] = 0
+            dirty_count -= 1
+        
+        # Choose a random valid move
+        possible_moves = get_possible_moves(*vacuum_pos)
+        if not possible_moves:
+            print("No more moves available.")
+            break
+        
+        _, vacuum_pos = random.choice(possible_moves)
+        steps += 1
+    
+    print(f"Finished cleaning in {steps} steps.")
+    print_grid(grid, vacuum_pos)
+
+# Example grid (0 = clean, 1 = dirty)
+grid = [
+    [0, 1, 0, 1, 0],
+    [1, 0, 1, 0, 1],
+    [0, 1, 0, 0, 0],
+    [1, 0, 1, 1, 0],
+    [0, 0, 1, 0, 0]
+]
+
+# Start position of the vacuum cleaner
+start_pos = (2, 2)
+
+# Run the vacuum cleaner simulation
+vacuum_cleaner(grid, start_pos)
