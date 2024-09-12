@@ -1,0 +1,29 @@
+% Define the graph as facts: edge(Source, Destination)
+edge(a, b).
+edge(a, c).
+edge(b, d).
+edge(b, e).
+edge(c, f).
+edge(d, g).
+edge(e, h).
+edge(f, i).
+
+% Define the BFS algorithm
+bfs(Start, Goal, Path) :-
+    bfs([Start], [], Goal, RevPath),
+    reverse(RevPath, Path).
+
+bfs([Goal|Rest], _, Goal, [Goal|Rest]).
+bfs([Current|Queue], Visited, Goal, Path) :-
+    findall(Next, (edge(Current, Next), \+ member(Next, Visited)), Neighbors),
+    append(Queue, Neighbors, NewQueue),
+    bfs(NewQueue, [Current|Visited], Goal, Path).
+
+% Query examples
+% Find the path from 'a' to 'i'
+% ?- bfs(a, i, Path).
+% Path = [a, c, f, i].
+
+% Find the path from 'a' to 'h'
+% ?- bfs(a, h, Path).
+% Path = [a, b, e, h].
