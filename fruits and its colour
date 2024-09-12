@@ -1,0 +1,49 @@
+% Define facts about fruits and their colors
+fruit_color(apple, red).
+fruit_color(banana, yellow).
+fruit_color(orange, orange).
+fruit_color(grape, purple).
+fruit_color(lemon, yellow).
+fruit_color(watermelon, green).
+fruit_color(strawberry, red).
+fruit_color(blueberry, blue).
+fruit_color(kiwi, brown).
+fruit_color(pineapple, yellow).
+
+% Define a rule to find the color of a fruit
+find_color(Fruit, Color) :-
+    fruit_color(Fruit, Color).
+
+% Define a rule to find fruits of a particular color
+fruits_of_color(Color, Fruit) :-
+    fruit_color(Fruit, Color).
+
+% Define a rule to list all fruits and their colors
+list_fruits :-
+    fruit_color(Fruit, Color),
+    format('~w is ~w~n', [Fruit, Color]),
+    fail.
+list_fruits.
+
+% Query examples
+% Find the color of a particular fruit
+% ?- find_color(apple, Color).
+% Color = red.
+
+% Find all fruits that are yellow
+% ?- fruits_of_color(yellow, Fruit).
+% Fruit = banana ;
+% Fruit = lemon.
+
+% List all fruits and their colors
+% ?- list_fruits.
+% apple is red
+% banana is yellow
+% orange is orange
+% grape is purple
+% lemon is yellow
+% watermelon is green
+% strawberry is red
+% blueberry is blue
+% kiwi is brown
+% pineapple is yellow
