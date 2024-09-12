@@ -1,0 +1,107 @@
+import heapq
+
+class PuzzleState:
+    def __init__(self, board, goal, g, parent=None):
+        self.board = board  
+        self.goal = goal    
+        self.g = g         
+        self.parent = parent 
+
+    def manhattan_distance(self):
+        distance = 0
+        for i in range(3):
+            for j in range(3):
+                if self.board[i][j] != 0:
+                    x, y = divmod(self.board[i][j] - 1, 3)
+                    distance += abs(i - x) + abs(j - y)
+        return distance
+
+    def is_goal(self):
+        return self.board == self.goal
+
+    def find_empty_tile(self):
+        for i in range(3):
+            for j in range(3):
+                if self.board[i][j] == 0:
+                    return i, j
+
+    def get_children(self):
+        children = []
+        empty_x, empty_y = self.find_empty_tile()
+
+        directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        for dx, dy in directions:
+            new_x, new_y = empty_x + dx, empty_y + dy
+
+            if 0 <= new_x < 3 and 0 <= new_y < 3:
+                new_board = [row[:] for row in self.board]
+                new_board[empty_x][empty_y], new_board[new_x][new_y] = new_board[new_x][new_y], new_board[empty_x][empty_y]
+                children.append(PuzzleState(new_board, self.goal, self.g + 1, self))
+
+        return children
+
+    def f(self):
+        return self.g + self.manhattan_distance()
+    def __lt__(self, other):
+        return self.f() < other.f()
+
+def solve_8_puzzle(start, goal):
+
+    open_list = []
+    heapq.heappush(open_list, PuzzleState(start, goal, 0))
+
+    
+    closed_set = set()
+
+    while open_list:
+        current_state = heapq.heappop(open_list)
+
+       
+        if current_state.is_goal():
+            return reconstruct_path(current_state)
+
+       
+        closed_set.add(tuple(tuple(row) for row in current_state.board))
+
+       
+        for child in current_state.get_children():
+            child_tuple = tuple(tuple(row) for row in child.board)
+            if child_tuple not in closed_set:
+                heapq.heappush(open_list, child)
+
+    return None
+
+def reconstruct_path(state):
+    path = []
+    while state:
+        path.append(state.board)
+        state = state.parent
+    return path[::-1] 
+
+def print_board(board):
+    for row in board:
+        print(" ".join(str(x) for x in row))
+    print()
+
+if __name__ == "__main__":
+    start = [
+        [1, 2, 3],
+        [4, 0, 6],
+        [7, 5, 8]
+    ]
+
+    goal = [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 0]
+    ]
+
+    solution = solve_8_puzzle(start, goal)
+
+    if solution:
+        print("Solution found!")
+        for step in solution:
+            print_board(step)
+            print("----")
+    else:
+        print("No solution exists")
