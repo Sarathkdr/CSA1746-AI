@@ -1,0 +1,72 @@
+% Define parent relationships
+parent(john, mary).     % John is a parent of Mary
+parent(john, james).    % John is a parent of James
+parent(mary, alice).    % Mary is a parent of Alice
+parent(mary, bob).      % Mary is a parent of Bob
+parent(james, charlie). % James is a parent of Charlie
+
+% Define mother relationships
+mother(mary, alice).
+mother(mary, bob).
+
+% Define father relationships
+father(john, mary).
+father(john, james).
+father(james, charlie).
+
+% Define a rule to find if X is a parent of Y
+is_parent(X, Y) :-
+    parent(X, Y).
+
+% Define a rule to find if X is the mother of Y
+is_mother(X, Y) :-
+    mother(X, Y).
+
+% Define a rule to find if X is the father of Y
+is_father(X, Y) :-
+    father(X, Y).
+
+% Define a rule to find if X is a sibling of Y
+is_sibling(X, Y) :-
+    parent(P, X),
+    parent(P, Y),
+    X \= Y.
+
+% Define a rule to find if X is a grandparent of Y
+is_grandparent(X, Y) :-
+    parent(X, P),
+    parent(P, Y).
+
+% Define a rule to find if X is an ancestor of Y
+is_ancestor(X, Y) :-
+    parent(X, Y).
+is_ancestor(X, Y) :-
+    parent(X, Z),
+    is_ancestor(Z, Y).
+
+% Query examples
+% Find if John is a parent of Alice
+% ?- is_parent(john, alice).
+% true.
+
+% Find if Mary is a mother of Alice
+% ?- is_mother(mary, alice).
+% true.
+
+% Find if James is a father of Charlie
+% ?- is_father(james, charlie).
+% true.
+
+% Find siblings of Bob
+% ?- is_sibling(bob, Sibling).
+% Sibling = alice.
+
+% Find grandparents of Charlie
+% ?- is_grandparent(Grandparent, charlie).
+% Grandparent = john.
+
+% Find ancestors of Charlie
+% ?- is_ancestor(Ancestor, charlie).
+% Ancestor = john ;
+% Ancestor = mary ;
+% Ancestor = james.
