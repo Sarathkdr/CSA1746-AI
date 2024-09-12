@@ -1,0 +1,21 @@
+% Define facts about birds and their ability to fly
+can_fly(eagle).
+can_fly(sparrow).
+can_fly(hummingbird).
+
+cannot_fly(penguin).
+cannot_fly(ostrich).
+cannot_fly(kiwi).
+
+% Rule to determine if a particular bird can fly
+can_this_bird_fly(Bird) :-
+    can_fly(Bird),
+    format('Yes, ~w can fly.', [Bird]), nl.
+
+can_this_bird_fly(Bird) :-
+    cannot_fly(Bird),
+    format('No, ~w cannot fly.', [Bird]), nl.
+
+% Query example
+check_bird(Bird) :-
+    can_this_bird_fly(Bird).
