@@ -1,0 +1,54 @@
+% Define symptoms for diseases
+disease(flu) :- 
+    symptom(fever),
+    symptom(cough),
+    symptom(sore_throat),
+    symptom(headache).
+
+disease(cold) :- 
+    symptom(sneezing),
+    symptom(runny_nose),
+    symptom(sore_throat).
+
+disease(covid19) :-
+    symptom(fever),
+    symptom(cough),
+    symptom(shortness_of_breath),
+    symptom(loss_of_taste_smell).
+
+disease(malaria) :-
+    symptom(fever),
+    symptom(chills),
+    symptom(sweating),
+    symptom(headache).
+
+% Ask for symptoms
+ask_symptom(Symptom) :-
+    format('Do you have ~w? (yes/no): ', [Symptom]),
+    read(Reply),
+    (Reply == yes -> assert(symptom(Symptom)) ; true).
+
+% Clear previous symptoms
+clear_symptoms :- retractall(symptom(_)).
+
+% Start the diagnosis process
+diagnose :-
+    clear_symptoms,
+    write('Welcome to the medical diagnosis system!'), nl,
+    ask_symptom(fever),
+    ask_symptom(cough),
+    ask_symptom(sore_throat),
+    ask_symptom(headache),
+    ask_symptom(sneezing),
+    ask_symptom(runny_nose),
+    ask_symptom(shortness_of_breath),
+    ask_symptom(loss_of_taste_smell),
+    ask_symptom(chills),
+    ask_symptom(sweating),
+    (disease(Disease) -> 
+        format('You might have ~w.', [Disease])
+    ; 
+        write('Sorry, I am unable to diagnose your condition.')).
+
+% Run the diagnosis
+:- diagnose.
