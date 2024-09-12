@@ -1,0 +1,30 @@
+% Define a list of vowel characters
+vowel(a).
+vowel(e).
+vowel(i).
+vowel(o).
+vowel(u).
+
+% Predicate to count vowels in a list of characters
+count_vowels([], 0).
+count_vowels([Char|Tail], Count) :-
+    (vowel(Char) ->
+        count_vowels(Tail, TailCount),
+        Count is TailCount + 1
+    ;
+        count_vowels(Tail, Count)
+    ).
+
+% Predicate to convert a string to a list of characters and count vowels
+count_vowels_in_string(String, Count) :-
+    string_chars(String, Chars),
+    count_vowels(Chars, Count).
+
+% Query examples
+% Count vowels in the string "hello"
+% ?- count_vowels_in_string("hello", Count).
+% Count = 2.
+
+% Count vowels in the string "programming"
+% ?- count_vowels_in_string("programming", Count).
+% Count = 3.
