@@ -1,0 +1,15 @@
+% Define the main predicate to solve the Tower of Hanoi problem
+hanoi(N) :- 
+    move(N, left, center, right).
+
+% Base case: if there is only one disk, move it from the source to the destination
+move(1, Source, _, Destination) :- 
+    format('Move disk from ~w to ~w~n', [Source, Destination]).
+
+% Recursive case: Move N-1 disks, then move the Nth disk, then move N-1 disks again
+move(N, Source, Temp, Destination) :-
+    N > 1,
+    M is N - 1,
+    move(M, Source, Destination, Temp),      % Move N-1 disks from Source to Temp using Destination as auxiliary
+    move(1, Source, Temp, Destination),      % Move the Nth disk from Source to Destination
+    move(M, Temp, Source, Destination).      % Move the N-1 disks from Temp to Destination using Source as auxiliary
