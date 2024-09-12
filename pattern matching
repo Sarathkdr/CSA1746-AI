@@ -1,0 +1,17 @@
+% Define some facts
+animal(cat).
+animal(dog).
+animal(bird).
+
+% Define a predicate to check if an entity is an animal
+is_animal(X) :-
+    animal(X).
+
+% Query examples
+% Check if 'dog' is an animal
+% ?- is_animal(dog).
+% true.
+
+% Check if 'fish' is an animal
+% ?- is_animal(fish).
+% false.
