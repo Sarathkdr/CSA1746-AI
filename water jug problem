@@ -1,0 +1,58 @@
+from collections import deque
+
+def is_valid(x, y, a, b):
+    """Check if the state is valid."""
+    return 0 <= x <= a and 0 <= y <= b
+
+def water_jug_solver(a, b, c):
+    """Solve the water jug problem."""
+    # Initial state: (0, 0) - both jugs are empty
+    initial_state = (0, 0)
+    
+    # Target state is having `c` liters in either jug
+    if c > max(a, b):
+        return "Not possible"
+    
+    # Queue for BFS and set to keep track of visited states
+    queue = deque([(initial_state, [])])
+    visited = set()
+    visited.add(initial_state)
+    
+    while queue:
+        (current_x, current_y), path = queue.popleft()
+        
+        # Check if we reached the goal
+        if current_x == c or current_y == c:
+            return path
+        
+        # Possible actions
+        actions = [
+            ((a, current_y), 'Fill Jug1'),
+            ((current_x, b), 'Fill Jug2'),
+            ((0, current_y), 'Empty Jug1'),
+            ((current_x, 0), 'Empty Jug2'),
+            ((current_x - min(current_x, b - current_y), current_y + min(current_x, b - current_y)), 'Pour Jug1 to Jug2'),
+            ((current_x + min(current_y, a - current_x), current_y - min(current_y, a - current_x)), 'Pour Jug2 to Jug1')
+        ]
+        
+        for (next_x, next_y), action in actions:
+            if is_valid(next_x, next_y, a, b) and (next_x, next_y) not in visited:
+                visited.add((next_x, next_y))
+                queue.append(((next_x, next_y), path + [action]))
+    
+    return "Not possible"
+
+# Example usage
+if __name__ == "__main__":
+    a = 4  # Capacity of Jug1
+    b = 3  # Capacity of Jug2
+    c = 2  # Desired amount of water
+    
+    result = water_jug_solver(a, b, c)
+    
+    if result == "Not possible":
+        print(result)
+    else:
+        print("Solution steps:")
+        for step in result:
+            print(step)
