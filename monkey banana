@@ -1,0 +1,45 @@
+% Define the initial state: monkey is at the door, banana is at the middle of the room, chair is at the window
+% The state is represented as a tuple: 
+% (Monkey position, Chair position, Monkey's status (on floor or on chair), Has banana or not)
+
+initial_state(state(at_door, at_window, on_floor, has_not)).
+
+% Define the goal state: monkey has the banana
+goal_state(state(_, _, _, has)).
+
+% Move action: Monkey can move from one place to another if it's on the floor
+move(state(Pos, ChairPos, on_floor, HasBanana),
+     move(Pos, NewPos),
+     state(NewPos, ChairPos, on_floor, HasBanana)) :-
+    Pos \= NewPos.  % The new position must be different from the current position
+
+% Push action: Monkey can push the chair to a new position if it's on the floor and at the same place as the chair
+move(state(Pos, Pos, on_floor, HasBanana),
+     push(Pos, NewPos),
+     state(NewPos, NewPos, on_floor, HasBanana)) :-
+    Pos \= NewPos.
+
+% Climb action: Monkey can climb onto the chair if it is at the same position as the chair
+move(state(Pos, Pos, on_floor, HasBanana),
+     climb(Pos),
+     state(Pos, Pos, on_chair, HasBanana)).
+
+% Grasp action: Monkey can grasp the banana if it is on the chair and under the banana
+move(state(at_middle, at_middle, on_chair, has_not),
+     grasp,
+     state(at_middle, at_middle, on_chair, has)).
+
+% Plan to achieve the goal
+solve_problem(State, [], State) :- goal_state(State).
+solve_problem(CurrentState, [Action|Actions], FinalState) :-
+    move(CurrentState, Action, NextState),
+    solve_problem(NextState, Actions, FinalState).
+
+% Start solving the problem from the initial state
+solve :-
+    initial_state(InitialState),
+    solve_problem(InitialState, Actions, FinalState),
+    write('Actions to reach goal: '), nl,
+    write(Actions), nl,
+    write('Final State: '), nl,
+    write(FinalState), nl.
